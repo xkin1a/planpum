@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan zajęć – Psychologia zdrowia 2 rok</title>
+<meta name="color-scheme" content="dark">
+<style>
+:root{--bg:#232427;--c:#2c2e32;--t:#ececec;--m:#a3a6ab;--b:#44474c;--a:#d0d4db;--at:#232427;--g:#25342b;--gb:#4a9e6b}
+*{box-sizing:border-box}body{margin:auto;background:var(--bg);color:var(--t);font:17px/1.5 "Times New Roman",Times,serif;padding:16px;max-width:720px}
+h1{font-size:25px;font-weight:700;margin:6px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--b)}h2{font-size:20px;font-weight:600;margin:14px 0 6px}h3{font-size:15px;font-weight:600;margin:16px 0 4px;color:var(--m)}
+input,button,select{font:inherit;color:var(--t);background:var(--c);border:1px solid var(--b);padding:10px 14px;border-radius:8px}input{width:100%}input:focus{outline:2px solid var(--a)}
+button{cursor:pointer;font-weight:500}button.on{background:var(--a);color:var(--at);border-color:var(--a)}
+.tabs{display:flex;gap:6px;margin:14px 0}.tabs button{flex:1}.nav{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.card{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:14px;margin:10px 0}
+.ev{border-left:4px solid;border-radius:8px;padding:10px 14px;margin:8px 0;background:var(--c);box-shadow:0 1px 3px rgba(0,0,0,.08)}.ev b{font-size:16px;font-weight:600;display:block}.ev small{display:block;color:var(--m);font-size:13px}
+.free{background:var(--g);border:1px solid var(--gb);border-left:4px solid var(--gb);border-radius:8px;padding:12px 14px;margin:8px 0;font-weight:500}.free small{display:block;font-weight:400;color:var(--m)}
+.sug{background:var(--c);border-radius:8px}.sug div{padding:10px 14px;border-bottom:1px solid var(--b);cursor:pointer}.sug small{color:var(--m)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.grid div{background:var(--c);min-height:54px;padding:5px;border:1px solid var(--b);border-radius:6px;font-size:13px;cursor:pointer}
+.grid .h{min-height:0;text-align:center;color:var(--m);border:0;background:none;font-weight:600}.grid .o{opacity:0;border:0}.grid .td{outline:2px solid var(--a)}.grid .fr{background:var(--g);border-color:var(--gb)}
+i{display:inline-block;width:9px;height:9px;margin:1px;border-radius:2px}.leg span{display:inline-block;margin:3px 12px 3px 0;font-size:13px}.m{color:var(--m)}
+.ev.all{background:#37352c;border-color:#c9a227;color:var(--t)}.ev.all a{color:var(--t);font-size:14px}.ics{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}.ics label{color:var(--m)}.cd{font-size:22px;font-weight:700;margin-top:8px}.tlw{overflow-x:auto;margin:12px 0;border:1px solid var(--b);border-radius:8px;background:var(--c)}.tlr{display:flex;width:max-content;border-bottom:1px solid var(--b)}.tlr:last-child{border:0}.tll{position:sticky;left:0;z-index:2;width:78px;flex:none;background:var(--bg);padding:8px;font-weight:700;font-size:15px;border-right:1px solid var(--b)}.tll.me{color:var(--a);text-decoration:underline}.tlt{position:relative;height:40px;background-image:linear-gradient(to right,var(--b) 1px,transparent 1px);background-size:96px 100%}.tlr.hd .tlt{height:24px}.tlr.hd .tll{background:var(--c)}.tlt span{position:absolute;top:3px;font-size:13px;color:var(--m);padding-left:4px}.bar{position:absolute;top:5px;bottom:5px;border-radius:4px;font-size:12px;line-height:1.2;padding:3px 5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#fff}button:hover{border-color:var(--a)}
+.ban{background:var(--c);border:1px solid var(--b);border-left:4px solid #e6b800;border-radius:8px;padding:10px 14px;margin:8px 0;display:flex;gap:10px;justify-content:space-between;align-items:center}.ban a{font-size:13px;color:var(--m)}
+details input{margin:4px 0}details summary{cursor:pointer}details button{margin:4px 0 10px}
+</style></head><body>
+<h1>Psychologia zdrowia 2 rok · sem. zimowy 2026/27</h1>
+<input id="q" placeholder="Wpisz imię i nazwisko studenta..." autocomplete="off">
+<div id="sug" class="sug"></div>
+<div id="who" class="card m"></div>
+<div id="ann"></div>
+<div id="next"></div>
+<div class="ics"><button id="ics">Dodaj do kalendarza</button><label>Przypomnienie <select id="rem"><option value="0">brak</option><option value="15">15 min przed</option><option value="30" selected>30 min przed</option><option value="60">1 h przed</option><option value="1440">1 dzień przed</option></select></label></div>
+<div class="tabs"><button data-v="d">Dzisiaj</button><button data-v="w">Tydzień</button><button data-v="k">Kalendarz</button><button data-v="s">Starosta</button></div>
+<div id="view"></div>
+<div id="adm" class="card" hidden><h2>Panel starosty</h2>
+<input id="k" type="password" placeholder="Hasło starosty">
+<h3>Nowe wydarzenie</h3><input id="etl" placeholder="Tytuł (np. Kurs STCW)"><input id="ed" type="date"><input id="ef" type="time"><input id="eto" type="time"><input id="ep" placeholder="Miejsce">
+<button id="addE">Dodaj wydarzenie dla wszystkich</button>
+<h3>Nowe ogłoszenie (widoczne 14 dni)</h3><input id="at" placeholder="np. Zajęcia z kardiologii przeniesione do sali 2"><button id="addA">Dodaj ogłoszenie</button>
+<div id="msg" class="m"></div></div>
+<div class="card leg" id="leg"></div>
+<script>
+// [od,do,data od,data do,przedmiot,klucz,miejsce,sala,wyjątek]
+const E=[
+["11:15","14:15","2026-11-16","2026-12-14","Metodologia badań psychologicznych","S1","KP","19"],
+["14:30","16:45","2026-11-16","2026-12-14","Procesy poznawcze","S1","KP","19"],
+["14:30","16:00","2026-12-21","2026-12-21","Procesy poznawcze","S1","KP","19"],
+["14:30","16:45","2027-01-11","2027-01-11","Procesy poznawcze","S1","KP","19"],
+["08:00","11:00","2026-11-16","2026-11-23","Psychologia rozwoju człowieka","S1","ZŻCziM","203"],
+["08:00","09:30","2026-11-30","2026-11-30","Psychologia rozwoju człowieka","S1","ZŻCziM","203"],
+["15:30","17:00","2026-10-12","2026-11-09","Wychowanie fizyczne","JW3","SWFiS",""],
+["14:00","15:30","2026-11-16","2027-02-08","Wychowanie fizyczne","JW3","SWFiS",""],
+["09:30","11:00","2026-11-16","2026-12-14","Emocje i motywacje","g4","ZŻCziM","201"],
+["11:15","14:15","2026-11-16","2026-12-14","Psychologia różnic indywidualnych","S2","ZŻCziM","201"],
+["15:00","16:30","2026-11-23","2026-12-21","Dydaktyka medyczna","S2","Chłapowskiego","B"],
+["08:00","09:30","2026-10-05","2026-11-09","Psychologia rozwoju człowieka","W","online",""],
+["09:45","11:15","2026-10-05","2026-11-09","Psychologia różnic indywidualnych","W","online",""],
+["11:30","13:00","2026-10-05","2026-11-09","Psychometria","W","online",""],
+["13:15","14:45","2026-10-05","2026-11-09","Procesy poznawcze","W","online",""],
+["15:00","16:30","2026-10-05","2026-11-09","Dydaktyka medyczna","W","online",""],
+["08:00","10:15","2026-11-24","2027-02-09","Język obcy","JW1","SPNJO",""],
+["11:00","13:15","2026-11-24","2027-02-09","Język obcy","JW2","SPNJO",""],
+["13:30","15:45","2026-11-24","2027-02-09","Język obcy","JW3","SPNJO",""],
+["10:45","12:15","2026-10-20","2027-02-09","Wychowanie fizyczne","JW1","SWFiS",""],
+["13:45","15:15","2026-10-20","2027-02-09","Wychowanie fizyczne","JW2","SWFiS",""],
+["13:00","15:15","2026-12-08","2027-01-26","Statystyka","g1","WNoZ","107","2027-01-12"],
+["13:00","14:30","2027-02-09","2027-02-09","Statystyka","g1","WNoZ","107"],
+["16:00","18:15","2026-12-08","2027-02-02","Statystyka","g2","WNoZ","107","2027-01-12"],
+["16:00","17:30","2027-02-09","2027-02-09","Statystyka","g2","WNoZ","107"],
+["08:00","10:15","2026-12-08","2027-01-26","Statystyka","g3","WNoZ","107","2027-01-12"],
+["08:00","09:30","2027-02-09","2027-02-09","Statystyka","g3","WNoZ","107"],
+["10:30","12:45","2026-12-08","2026-12-22","Statystyka","g4","WNoZ","107"],
+["10:30","12:45","2027-01-19","2027-02-02","Statystyka","g4","WNoZ","107"],
+["09:45","11:15","2027-02-09","2027-02-09","Statystyka","g4","WNoZ","107"],
+["11:15","14:15","2026-11-18","2026-12-16","Psychologia różnic indywidualnych","S1","ZŻCziM","202"],
+["08:45","11:00","2026-11-04","2026-12-16","Emocje i motywacje","S1","ZŻCziM","101"],
+["08:45","10:15","2027-01-13","2027-01-13","Emocje i motywacje","S1","ZŻCziM","101"],
+["11:45","15:30","2026-11-04","2026-11-04","Psychometria","S1","ZŻCziM","202"],
+["11:15","13:30","2026-11-04","2026-12-16","Emocje i motywacje","S2","ZŻCziM","101"],
+["11:15","12:45","2027-01-13","2027-01-13","Emocje i motywacje","S2","ZŻCziM","101"],
+["08:00","11:00","2026-11-04","2026-11-18","Psychologia rozwoju człowieka","S2","ZŻCziM","101"],
+["08:00","09:30","2026-11-25","2026-11-25","Psychologia rozwoju człowieka","S2","ZŻCziM","101"],
+["13:45","15:15","2027-01-14","2027-02-11","Dydaktyka medyczna","g1","Chłapowskiego","A"],
+["15:30","17:00","2027-01-14","2027-02-11","Dydaktyka medyczna","g2","Chłapowskiego","A"],
+["11:30","13:00","2026-11-19","2026-12-17","Emocje i motywacje","g1","ZŻCziM","201"],
+["09:45","11:15","2026-11-19","2026-12-17","Emocje i motywacje","g2","ZŻCziM","201"],
+["14:30","16:00","2026-11-19","2026-12-17","Dydaktyka medyczna","S1","Chłapowskiego","A"],
+["10:30","12:00","2027-01-14","2027-02-11","Dydaktyka medyczna","g3","Chłapowskiego","A"],
+["08:45","10:15","2027-01-14","2027-02-11","Dydaktyka medyczna","g4","Chłapowskiego","A"],
+["08:00","09:30","2026-11-19","2026-12-17","Emocje i motywacje","g3","ZŻCziM","201"],
+["09:45","12:45","2026-11-19","2026-12-17","Metodologia badań psychologicznych","S2","ZŻCziM","201"],
+["12:00","15:45","2026-11-12","2026-11-12","Psychometria","S2","ZŻCziM","101"],
+["13:00","15:15","2026-11-19","2026-12-17","Procesy poznawcze","S2","ZŻCziM","101"],
+["13:00","14:30","2027-01-14","2027-01-14","Procesy poznawcze","S2","ZŻCziM","101"],
+["13:00","15:15","2027-01-21","2027-01-21","Procesy poznawcze","S2","ZŻCziM","101"],
+["08:00","09:30","2026-10-08","2026-11-05","Emocje i motywacje","W","online",""],
+["09:45","11:15","2026-10-15","2026-11-12","Metodologia badań psychologicznych","W","online",""],
+["13:30","15:00","2026-11-27","2026-11-27","Emocje i motywacje","g4","ZŻCziM","101"]];
+// [S, JW, grupa ćw., lista]
+const G=[
+["S1","JW1","g1","Mazurkiewicz Alicja;Adamski Jędrzej;Buhl Urszula;Zaborowska Amelia;Bazyliński Mikołaj;Borowiecka Joanna;Gjostol Stella;Budek Natalia;Bukowska Martyna;Charzyńska Laura;Chłoń Kinga;Ligenza Anna;Giętkowski Dawid;Golec Anna"],
+["S1","JW1","g2","Hawro Wiktoria;Jackiewicz Julia;Jatczak Karolina;Jędrzejczak-Łobacz Nina;Karandyszowska Elena;Sójka Jaśmina;Majewski Maciej"],
+["S1","JW2","g2","Lange Natalia;Kowalska Zofia;Madej Kinga;Malicka Elżbieta;Małecka Joanna;Markiewicz Zofia;Miętus Julia"],
+["S2","JW2","g3","Smacki Alex;Ossowska Barbara;Pich Julia;Piech Amelia;Pudlis Hanna;Rainer Samanta;Szews Julia;Karwala Wiktoria;Wons Maria;Saja Antonina;Semik Julia;Woźniak Aleksandra;Skubisz Natalia;Osmólska Nina;Sochanowska Dominika"],
+["S2","JW3","g4","Kubiak Alicja;Tomczyk Sabina;Trojanowska Wiktoria;Weinar Aleksandra;Wejda Anna;Wołkowska Weronika;Wrzesińska Kinga;Yakymenko Sofija;Zarębska Karolina;Zielińska Sara;Zwara Zuzanna;Rajczyk Jagna;Janicki Jakub;Kwapińska Alicja;Barańska Amanda;Kujawa Aleksandra"],
+["","","","Suchodolska Dominika;Saganowicz Igor;Wiśniewska Wiktoria"]];
+const P=[];G.forEach(([s,j,g,l])=>l.split(";").forEach(n=>P.push({n,k:["W",s,j,g].filter(Boolean),u:!s})));
+const PL={KP:"Klinika Psychiatrii",WNoZ:"Wydział Nauk o Zdrowiu",SPNJO:"Studium Języków Obcych",SWFiS:"Studium WF i Sportu","ZŻCziM":"Zakład Żywienia Człowieka i Metabolomiki","Chłapowskiego":"ul. Chłapowskiego"};
+const MO=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+const MN=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
+const DN=["Niedziela","Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota"];
+const subj=[...new Set(E.map(e=>e[4]))],col=s=>`hsl(${subj.indexOf(s)*40+10} 55% 50%)`;
+const $=id=>document.getElementById(id),iso=d=>d.toISOString().slice(0,10),D=s=>new Date(s+"T00:00:00Z");
+let me=null,view="d",cur=new Date();cur=D(iso(new Date(Date.now()-cur.getTimezoneOffset()*6e4)));
+try{const s=localStorage.getItem("stu");if(s)me=P.find(p=>p.n===s)||null}catch(e){}
+function on(d,e){const f=D(e[2]),t=iso(d);return t>=e[2]&&t<=e[3]&&(d-f)/864e5%7==0&&e[8]!==t}
+// Dni wolne: "RRRR-MM-DD":"opis". Dni rektorskie uzupełnij wg zarządzenia na rok 2026/27.
+const H={"2026-11-01":"Wszystkich Świętych","2026-11-11":"Narodowe Święto Niepodległości","2026-12-24":"Wigilia","2026-12-25":"Boże Narodzenie","2026-12-26":"Drugi dzień Bożego Narodzenia","2027-01-01":"Nowy Rok","2027-01-06":"Trzech Króli","2027-03-28":"Wielkanoc","2027-03-29":"Poniedziałek Wielkanocny","2027-05-01":"Święto Pracy","2027-05-03":"Święto Konstytucji 3 Maja","2027-05-27":"Boże Ciało"};
+const R={"2026-10-01":"Dzień rektorski","2026-11-02":"Dzień rektorski","2027-01-08":"Dzień rektorski","2027-05-04":"Dzień rektorski","2027-05-21":"Dzień rektorski (Juwenalia)","2027-05-28":"Dzień rektorski"};
+const B={};for(let d=D("2026-12-23");d<=D("2027-01-07");d=add(d,1))B[iso(d)]="Przerwa świąteczna";
+for(let d=D("2027-03-26");d<=D("2027-03-30");d=add(d,1))B[iso(d)]="Przerwa świąteczna";
+for(let d=D("2027-02-15");d<=D("2027-02-21");d=add(d,1))B[iso(d)]="Przerwa semestralna";
+const off=d=>H[iso(d)]||R[iso(d)]||B[iso(d)];
+let SH={events:[],ann:[]};
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
+const se=d=>SH.events.filter(e=>e.date===iso(d)).sort((a,b)=>(a.from||"")<(b.from||"")?-1:1);
+const sh=e=>`<div class="ev all"><small>${e.from?esc(e.from)+"–"+esc(e.to):"cały dzień"}</small><b>${esc(e.title)}</b><small>${esc(e.place)}</small><small>Dla wszystkich</small></div>`;
+
+const dh=(d,l)=>(off(d)?`<div class="free">Dzień wolny<small>${off(d)}</small></div>`:"")+se(d).map(sh).join("")+(off(d)?"":(l.map(evh).join("")||(se(d).length?"":'<p class="m">Brak zajęć.</p>')));
+const dhX=(d,l)=>off(d)?`<div class="free">Dzień wolny<small>${off(d)}</small></div>`:(l.map(evh).join("")||'<p class="m">Brak zajęć.</p>');
+function day(d){if(off(d))return [];return E.filter(e=>on(d,e)&&(!me||e[5]=="W"&&1||me.k.includes(e[5]))).sort((a,b)=>a[0]<b[0]?-1:1)}
+function evh(e){return `<div class="ev" style="border-color:${col(e[4])}"><small>${e[0]}–${e[1]}</small><b>${e[4]}</b><small>${e[6]=="online"?"On-line":(PL[e[6]]||e[6])+(e[7]?", sala "+e[7]:"")} · ${e[5]=="W"?"Wykład":e[5]}</small></div>`}
+function fmt(d){return `${DN[d.getUTCDay()]}, ${d.getUTCDate()} ${MO[d.getUTCMonth()]} ${d.getUTCFullYear()}`}
+function add(d,n){return new Date(d.getTime()+n*864e5)}
+const mi=t=>+t.slice(0,2)*60+ +t.slice(3,5),hh=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+const allDay=d=>off(d)?[]:E.filter(e=>on(d,e));
+function freeHtml(d){if(off(d))return"";const sh=se(d);if(sh.some(e=>!e.from))return"";
+ const iv=allDay(d).map(e=>[mi(e[0]),mi(e[1])]).concat(sh.map(e=>[mi(e.from),mi(e.to||e.from)])).sort((a,b)=>a[0]-b[0]);if(!iv.length)return"";
+ let t=480,r=[];for(const[a,b]of iv){if(a-t>=30)r.push([t,a]);t=Math.max(t,b)}if(1200-t>=30)r.push([t,1200]);
+ return r.length?'<div class="free">Wolne okna (żadna grupa nie ma zajęć):'+r.map(([a,b])=>`<small>• ${hh(a)} – ${hh(b)} (${b-a} min)</small>`).join("")+"</div>":""}
+function tl(d){const L=allDay(d),S=se(d).filter(e=>e.from);if(!L.length&&!S.length)return"";
+ const R={};L.forEach(e=>(R[e[5]]=R[e[5]]||[]).push([mi(e[0]),mi(e[1]),e[4],col(e[4])]));
+ if(S.length)R["Wszyscy"]=S.map(e=>[mi(e.from),e.to?mi(e.to):mi(e.from)+30,e.title,"#c9a227"]);
+ const all=Object.values(R).flat(),a=Math.floor(Math.min(...all.map(x=>x[0]))/60),n=Math.max(Math.ceil(Math.max(...all.map(x=>x[1]))/60)-a,1),W=n*96;
+ const keys=Object.keys(R).sort((x,y)=>x=="W"?-1:y=="W"?1:x.localeCompare(y));
+ let h='<div class="tlw"><div class="tlr hd"><div class="tll"></div><div class="tlt" style="width:'+W+'px">'+Array.from({length:n},(_,i)=>`<span style="left:${i*96}px">${hh((a+i)*60)}</span>`).join("")+"</div></div>";
+ keys.forEach(k=>{h+=`<div class="tlr"><div class="tll${me&&me.k.includes(k)?" me":""}">${k=="W"?"Wykład":esc(k)}</div><div class="tlt" style="width:${W}px">`+R[k].map(([s0,e0,nm,c])=>`<div class="bar" style="left:${(s0-a*60)/(n*60)*100}%;width:${(e0-s0)/(n*60)*100}%;background:${c};${c[0]=="#"?"color:#111":""}" title="${esc(nm)} ${hh(s0)}–${hh(e0)}">${esc(nm)}</div>`).join("")+"</div></div>"});
+ return h+"</div>"}
+function nextCard(){const now=new Date(),td=iso(new Date(now-now.getTimezoneOffset()*6e4)),hm=now.toTimeString().slice(0,5),nm=now.getHours()*60+now.getMinutes();
+ let nx=null;for(let i=0;i<120&&!nx;i++){const d=add(D(td),i);nx=day(d).find(e=>i>0||e[1]>hm);if(nx)nx=[nx,d]}
+ if(!nx){$("next").innerHTML="";return}
+ const e=nx[0],i=Math.round((nx[1]-D(td))/864e5),f=m=>(m>=60?Math.floor(m/60)+" h ":"")+m%60+" min",
+ c=i==0?(mi(e[0])>nm?"Start za "+f(mi(e[0])-nm):"Trwa teraz · koniec za "+f(mi(e[1])-nm)):i==1?"Jutro o "+e[0]:"Za "+i+" dni · "+fmt(nx[1]);
+ $("next").innerHTML=`<div class="ev" style="border-color:${col(e[4])}"><small>NASTĘPNE ZAJĘCIA · ${i==0?"DZIŚ":i==1?"JUTRO":fmt(nx[1]).toUpperCase()}</small><b>${e[4]}</b><small>${e[0]}–${e[1]} · ${e[6]=="online"?"On-line":(PL[e[6]]||e[6])+(e[7]?", sala "+e[7]:"")}</small><div class="cd">${c}</div></div>`}
+function render(){
+ $("who").innerHTML=me?`<b style="color:var(--t)">${me.n}</b><br>Grupy: ${me.u?"do ustalenia z prowadzącym":me.k.slice(1).join(", ")}`:"Wybierz studenta, aby zobaczyć swój plan (bez wyboru – wszystkie grupy).";
+ document.querySelectorAll(".tabs button").forEach(b=>b.className=b.dataset.v==view?"on":"");
+ const now=new Date(),td=iso(new Date(now-now.getTimezoneOffset()*6e4)),hm=now.toTimeString().slice(0,5);
+ nextCard();
+ let h="";
+ if(view=="d"){h=`<div class="nav"><button onclick="mv(-1)">‹</button><button onclick="cur=D('${td}');render()">Dziś</button><button onclick="mv(1)">›</button></div><h2>${fmt(cur)}</h2>`+tl(cur)+freeHtml(cur)+dh(cur,day(cur))}
+ if(view=="w"){const m=add(cur,-((cur.getUTCDay()+6)%7));h=`<div class="nav"><button onclick="mv(-7)">‹</button><button onclick="cur=D('${td}');render()">Dziś</button><button onclick="mv(7)">›</button></div>`;
+  for(let i=0;i<7;i++){const d=add(m,i),l=day(d);h+=`<h3>${fmt(d)}</h3>`+dh(d,l)}}
+ if(view=="k"){h='<p class="m">Kliknij dzień, aby zobaczyć zajęcia</p>';
+  for(let mo=9;mo<14;mo++){const y=2026+(mo>11?1:0),mm=mo%12,f=new Date(Date.UTC(y,mm,1)),n=new Date(Date.UTC(y,mm+1,0)).getUTCDate();
+   h+=`<h3>${MN[mm]} ${y}</h3><div class="grid">`+["Pon","Wt","Śr","Czw","Pt","Sob","Nie"].map(x=>`<div class="h">${x}</div>`).join("")+"<div class='o'></div>".repeat((f.getUTCDay()+6)%7);
+   for(let i=1;i<=n;i++){const d=new Date(Date.UTC(y,mm,i));h+=`<div class="${iso(d)==td?"td ":""}${off(d)?"fr":""}" title="${off(d)||""}" onclick="cur=D('${iso(d)}');view='d';render()">${i}<br>${se(d).length?'<i style="background:#e6b800"></i>':""}${[...new Set(day(d).map(e=>e[4]))].map(s=>`<i style="background:${col(s)}"></i>`).join("")}</div>`}
+   h+="</div>"}}
+ if(view=="s"){const A=(k,a)=>`<a href="#" onclick="del('${k}','${esc(a.id)}');return false">Usuń</a>`;
+  h='<h3>Aktywne wydarzenia</h3>'+(SH.events.map(e=>`<div class="ev all"><small>${esc(e.date)} ${e.from?esc(e.from)+"–"+esc(e.to):"cały dzień"}</small><b>${esc(e.title)}</b><small>${esc(e.place)} · ${A("events",e)}</small></div>`).join("")||'<p class="m">Brak.</p>')+'<h3>Ogłoszenia</h3>'+(SH.ann.map(a=>`<div class="ban"><span>${esc(a.text)}</span><span>${A("ann",a)}</span></div>`).join("")||'<p class="m">Brak.</p>')}
+ $("adm").hidden=view!="s";
+ $("view").innerHTML=h;
+ let hid=[];try{hid=JSON.parse(localStorage.getItem("hid")||"[]")}catch(e){}
+ $("ann").innerHTML=SH.ann.filter(a=>!hid.includes(a.id)).map(a=>`<div class="ban"><span>${esc(a.text)}</span><span><a href="#" onclick="hide('${esc(a.id)}');return false">Ukryj</a></span></div>`).join("");
+ $("leg").innerHTML='<b>Legenda kolorów:</b><br><span><i style="background:#2e9e5b"></i> Dzień wolny</span>'+subj.map(s=>`<span><i style="background:${col(s)}"></i> ${s}</span>`).join("")}
+function mv(n){cur=add(cur,n);render()}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{view=b.dataset.v;render()});
+$("q").oninput=e=>{const v=e.target.value.toLowerCase().trim();$("sug").innerHTML=v?P.filter(p=>p.n.toLowerCase().includes(v)).slice(0,6).map(p=>`<div data-n="${p.n}">${p.n}<br><small>${p.u?"grupa do ustalenia":p.k.slice(1).join(", ")}</small></div>`).join(""):""};
+$("sug").onclick=e=>{const n=e.target.closest("[data-n]");if(!n)return;me=P.find(p=>p.n==n.dataset.n);try{localStorage.setItem("stu",me.n)}catch(x){}$("q").value="";$("sug").innerHTML="";render()};
+$("ics").onclick=()=>{if(!me){alert("Najpierw wybierz studenta.");return}
+ const m=$("rem").value,x=t=>String(t).replace(/[,;]/g,"\\$&"),st=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z",
+ t0=D(iso(new Date(Date.now()-new Date().getTimezoneOffset()*6e4))),L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Plan zajec//PL","CALSCALE:GREGORIAN"];
+ for(let i=0;i<220;i++){const d=add(t0,i),ds=iso(d).replace(/-/g,"");day(d).forEach(e=>{
+  L.push("BEGIN:VEVENT","UID:"+ds+e[0].replace(":","")+subj.indexOf(e[4])+e[5]+"@plan","DTSTAMP:"+st,"DTSTART:"+ds+"T"+e[0].replace(":","")+"00","DTEND:"+ds+"T"+e[1].replace(":","")+"00","SUMMARY:"+x(e[4]),"LOCATION:"+x(e[6]=="online"?"On-line":(PL[e[6]]||e[6])+(e[7]?", sala "+e[7]:"")));
+  if(m!="0")L.push("BEGIN:VALARM","TRIGGER:-PT"+m+"M","ACTION:DISPLAY","DESCRIPTION:"+x(e[4]),"END:VALARM");L.push("END:VEVENT")})}
+ L.push("END:VCALENDAR");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([L.join("\r\n")],{type:"text/calendar"}));a.download="plan.ics";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1e3)};
+const msg=t=>$("msg").textContent=t;
+async function post(b){b.key=$("k").value;if(!b.key){msg("Wpisz hasło starosty.");return}
+ try{const r=await fetch("/api",{method:"POST",body:JSON.stringify(b)});if(r.status==403){msg("Złe hasło.");return}if(!r.ok){let t="";try{t=(await r.json()).error||""}catch(e){}msg("Błąd zapisu ("+r.status+")"+(t?": "+t:"")+".");return}
+  SH=await r.json();try{localStorage.setItem("key",b.key)}catch(e){}msg("Zapisano.");render()}catch(e){msg("Brak połączenia z serwerem.")}}
+function del(kind,id){if(!$("k").value){alert("Najpierw wpisz hasło starosty w zakładce Starosta.");return}if(confirm("Usunąć dla wszystkich?"))post({op:"del",kind,id})}
+function hide(id){let h=[];try{h=JSON.parse(localStorage.getItem("hid")||"[]");h.push(id);localStorage.setItem("hid",JSON.stringify(h))}catch(e){}render()}
+$("addE").onclick=()=>{if(!$("etl").value||!$("ed").value){msg("Podaj tytuł i datę.");return}post({op:"addEvent",title:$("etl").value,date:$("ed").value,from:$("ef").value,to:$("eto").value,place:$("ep").value})};
+$("addA").onclick=()=>{if(!$("at").value){msg("Wpisz treść.");return}post({op:"addAnn",text:$("at").value});$("at").value=""};
+try{$("k").value=localStorage.getItem("key")||""}catch(e){}
+$("ed").value=iso(cur);
+(async()=>{try{const r=await fetch("/api");if(r.ok)SH=await r.json()}catch(e){}render()})();
+render();
+setInterval(nextCard,3e4);
+</script></body></html>
