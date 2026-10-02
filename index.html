@@ -32,7 +32,7 @@ details input{margin:4px 0}details summary{cursor:pointer}details button{margin:
 <div id="view"></div>
 <div id="adm" class="card" hidden><h2>Panel starosty</h2>
 <input id="k" type="password" placeholder="Hasło starosty">
-<h3>Nowe wydarzenie</h3><input id="etl" placeholder="Tytuł (np. Kurs STCW)"><input id="ed" type="date"><input id="ef" type="time"><input id="eto" type="time"><input id="ep" placeholder="Miejsce">
+<h3>Nowe wydarzenie</h3><input id="etl" placeholder="Tytuł (np. Zmiana wf na 13;00)"><input id="ed" type="date"><input id="ef" type="time"><input id="eto" type="time"><input id="ep" placeholder="Miejsce">
 <button id="addE">Dodaj wydarzenie dla wszystkich</button>
 <h3>Nowe ogłoszenie (widoczne 14 dni)</h3><input id="at" placeholder="np. Zajęcia z kardiologii przeniesione do sali 2"><button id="addA">Dodaj ogłoszenie</button>
 <div id="msg" class="m"></div></div>
@@ -96,11 +96,11 @@ const E=[
 ["13:30","15:00","2026-11-27","2026-11-27","Emocje i motywacje","g4","ZŻCziM","101"]];
 // [S, JW, grupa ćw., lista]
 const G=[
-["S1","JW1","g1","Mazurkiewicz Alicja;Adamski Jędrzej;Buhl Urszula;Zaborowska Amelia;Bazyliński Mikołaj;Borowiecka Joanna;Gjostol Stella;Budek Natalia;Bukowska Martyna;Charzyńska Laura;Chłoń Kinga;Ligenza Anna;Giętkowski Dawid;Golec Anna"],
-["S1","JW1","g2","Hawro Wiktoria;Jackiewicz Julia;Jatczak Karolina;Jędrzejczak-Łobacz Nina;Karandyszowska Elena;Sójka Jaśmina;Majewski Maciej"],
+["S1","JW1","g1","Mazurkiewicz Alicja;Adamski Jędrzej;Buhl Urszula;Zaborowska Amelia;Bazyliński Mikołaj;Borowiecka Joanna;Gjostol Stella;Budek Natalia;Bukowska Martyna;Charzyńska Laura;Chłoń Kinga;Giętkowski Dawid;Golec Anna"],
+["S1","JW1","g2","Hawro Wiktoria;Jackiewicz Julia;Jatczak Karolina;Jędrzejczak-Łobacz Nina;Sójka Jaśmina;Majewski Maciej"],
 ["S1","JW2","g2","Lange Natalia;Kowalska Zofia;Madej Kinga;Malicka Elżbieta;Małecka Joanna;Markiewicz Zofia;Miętus Julia"],
 ["S2","JW2","g3","Smacki Alex;Ossowska Barbara;Pich Julia;Piech Amelia;Pudlis Hanna;Rainer Samanta;Szews Julia;Karwala Wiktoria;Wons Maria;Saja Antonina;Semik Julia;Woźniak Aleksandra;Skubisz Natalia;Osmólska Nina;Sochanowska Dominika"],
-["S2","JW3","g4","Kubiak Alicja;Tomczyk Sabina;Trojanowska Wiktoria;Weinar Aleksandra;Wejda Anna;Wołkowska Weronika;Wrzesińska Kinga;Yakymenko Sofija;Zarębska Karolina;Zielińska Sara;Zwara Zuzanna;Rajczyk Jagna;Janicki Jakub;Kwapińska Alicja;Barańska Amanda;Kujawa Aleksandra"],
+["S2","JW3","g4","Kubiak Alicja;Tomczyk Sabina;Trojanowska Wiktoria;Weinar Aleksandra;Wejda Anna;Wołkowska Weronika;Wrzesińska Kinga;Yakymenko Sofija;Zarębska Karolina;Zielińska Sara;Zwara Zuzanna;Rajczyk Jagna;Janicki Jakub;Kwapińska Alicja;Barańska Amanda;Karandyszowska Elena;Kujawa Aleksandra"],
 ["","","","Suchodolska Dominika;Saganowicz Igor;Wiśniewska Wiktoria"]];
 const P=[];G.forEach(([s,j,g,l])=>l.split(";").forEach(n=>P.push({n,k:["W",s,j,g].filter(Boolean),u:!s})));
 const PL={KP:"Klinika Psychiatrii",WNoZ:"Wydział Nauk o Zdrowiu",SPNJO:"Studium Języków Obcych",SWFiS:"Studium WF i Sportu","ZŻCziM":"Zakład Żywienia Człowieka i Metabolomiki","Chłapowskiego":"ul. Chłapowskiego"};
